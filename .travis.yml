@@ -1,0 +1,27 @@
+sudo: required
+services: 
+  - docker
+
+before_install:
+  - docker build -t v4mpir0ck/complex-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run v4mpir0ck/complex-test npm test -- --coverage
+
+after_success:
+  - docker build -t v4mpir0ck/complex-client ./client
+  - docker build -t v4mpir0ck/complex-nginx ./nginx
+  - docker build -t v4mpir0ck/complex-server ./server
+  - docker build -t v4mpir0ck/complex-worker ./worker
+
+
+# log in en dockerhub
+# setup variables encriptadas con username and password en travis 
+# churro para meter la pass al comando ya que travis no permite prompts
+# basicamente le pasa el resultado de lo primero al segundo
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+# ahora toca subirlas a docker hub
+  - docker push v4mpir0ck/complex-client
+  - docker push v4mpir0ck/complex-nginx
+  - docker push v4mpir0ck/complex-server
+  - docker push v4mpir0ck/complex-worker
