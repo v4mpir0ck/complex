@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: client-cluster-ip-service
+spec:
+  type: ClusterIP
+  selector:
+    component: web
+  ports:
+    # port el servicio por el que se accede al contenedor, puede ser el que quieras
+    - port: 3000
+    # targetPort el destino del servicio, el real de la app
+      targetPort: 3000  
